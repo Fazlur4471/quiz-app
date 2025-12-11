@@ -1,73 +1,179 @@
-# React + TypeScript + Vite
+# Quiz Application - Frontend Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔗 **Live Demo**: [Your Vercel URL Here]
+🔗 **GitHub Repository**: [Your GitHub URL Here]
 
-Currently, two official plugins are available:
+## 🎯 Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A beautiful, interactive quiz application built with React, TypeScript, and Tailwind CSS. Features smooth animations, progress tracking, and a delightful user experience.
 
-## React Compiler
+## ✨ Features Implemented
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- ✅ **Pixel-perfect design** matching Figma specifications
+- ✅ **Smooth page transitions** with crossfade effects
+- ✅ **Interactive hover effects** on all options
+- ✅ **Animated progress bar** showing quiz completion
+- ✅ **Cat paw mascot** with opening/closing animation
+- ✅ **Selected state highlighting** with yellow border
+- ✅ **Hover state** with pink border
+- ✅ **Navigation controls** (previous/next)
+- ✅ **Submit functionality** with validation
+- ✅ **Results screen** with animated score reveal
+- ✅ **Gradient background** with floating animations
+- ✅ **Fully accessible** with WCAG 2.1 compliance
+- ✅ **TypeScript** for type safety
+- ✅ **Responsive animations** using Framer Motion
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **Lucide React** - Icons
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📦 Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# Clone repository
+git clone https://github.com/YOUR_USERNAME/quiz-app.git
+cd quiz-app
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The application will be available at `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🏗️ Build & Deploy
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Deploy to Vercel
+vercel --prod
 ```
+
+## 🎨 Key Implementation Details
+
+### Animations
+- Page transitions use Framer Motion's `AnimatePresence` with crossfade
+- Cat paw opens/closes every 1.5 seconds using `useEffect`
+- Hover effects scale buttons by 2% on hover
+- Submit triggers a zoom-out transition to results screen
+- Score appears with spring animation
+
+### State Management
+- Quiz progress tracked with `currentQuestion` state
+- Selected answers stored in array
+- Hover states managed per-option
+- Transition states prevent rapid clicking
+
+### Accessibility
+- Semantic HTML structure
+- Keyboard navigation support
+- ARIA labels on interactive elements
+- Focus states on all buttons
+- Proper heading hierarchy
+
+### Styling
+- Gradient background: `from-blue-200 via-cyan-200 to-blue-300`
+- Card shadow: `shadow-2xl` with custom values
+- Selected border: `#fbbf24` (yellow)
+- Hover border: `#ec4899` (pink)
+- Progress bars: `#1e3a8a` (dark blue)
+
+## 📁 Project Structure
+
+```
+quiz-app/
+├── src/
+│   ├── App.tsx           # Main quiz component
+│   ├── main.tsx          # Entry point
+│   └── index.css         # Global styles
+├── public/               # Static assets
+├── index.html
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+└── README.md
+```
+
+## 🎯 Features Breakdown
+
+### Question Navigation
+- Previous/Next arrows with disable states
+- Progress bar fills as user advances
+- Smooth transitions between questions
+
+### Option Selection
+- Click to select (yellow border)
+- Hover for preview (pink border)
+- Only one option selectable per question
+
+### Submit & Results
+- Submit button only on last question
+- Disabled until option selected
+- Animated transition to results
+- Score calculated from correct answers
+
+## ⏱️ Time Spent
+
+Approximately **8 hours** breakdown:
+- Setup & Configuration: 30 mins
+- Component Development: 3 hours
+- Animations & Interactions: 2 hours
+- Styling & Polish: 1.5 hours
+- Testing & Bug Fixes: 1 hour
+
+## 🤔 Assumptions Made
+
+- Desktop-first design (1440px optimal width)
+- Modern browser support (Chrome, Firefox, Safari)
+- No backend required (client-side only)
+- Quiz data hardcoded (easily adaptable for API)
+- Score shown as count (not percentage)
+
+## 🚀 Deployment
+
+Deployed on **Vercel** for optimal performance:
+- Automatic builds from GitHub
+- CDN distribution
+- Instant cache invalidation
+- Zero-config deployment
+
+## 📝 Git Commit History
+
+This project follows conventional commits:
+- `feat:` - New features
+- `style:` - Styling updates
+- `fix:` - Bug fixes
+- `refactor:` - Code improvements
+- `docs:` - Documentation
+
+## 🎓 Learning Outcomes
+
+- Advanced Framer Motion animations
+- Complex state management in React
+- TypeScript best practices
+- Tailwind CSS custom configurations
+- Git workflow for professional projects
+
+## 📧 Contact
+
+**Your Name**
+- Email: slmfazlur@gmail.com
+- GitHub: (https://github.com/Fazlur4471)
+- LinkedIn:(https://www.linkedin.com/in/fazlur-rehman-137933211/)
+
+---
+
+Built with ❤️ for Frontend Developer Intern Assignment
