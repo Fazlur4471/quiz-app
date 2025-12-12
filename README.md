@@ -1,6 +1,6 @@
 # Quiz Application - Frontend Assignment
 
-🔗 **Live Demo**: [Your Vercel URL Here]
+🔗 **Live Demo**: https://quiz-app-five-pied-36.vercel.app/
 🔗 **GitHub Repository**: https://github.com/Fazlur4471/quiz-app
 
 ## 🎯 Overview
@@ -94,7 +94,7 @@ vercel --prod
 ## 📁 Project Structure
 
 ```
-quiz-app/
+the-wedding-planner
 ├── src/
 │   ├── App.tsx           # Main quiz component
 │   ├── main.tsx          # Entry point
@@ -124,7 +124,7 @@ quiz-app/
 - Disabled until option selected
 - Animated transition to results
 - Score calculated from correct answers
-
+- Play again once the quiz ends
 ## ⏱️ Time Spent
 
 Approximately **8 hours** breakdown:
@@ -132,7 +132,7 @@ Approximately **8 hours** breakdown:
 - Component Development: 3 hours
 - Animations & Interactions: 2 hours
 - Styling & Polish: 1.5 hours
-- Testing & Bug Fixes: 1 hour
+- Testing & Bug Fixes: 2 hour
 
 ## 🤔 Assumptions Made
 
