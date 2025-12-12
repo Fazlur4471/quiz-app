@@ -1,7 +1,7 @@
 # Quiz Application - Frontend Assignment
 
 🔗 **Live Demo**: [Your Vercel URL Here]
-🔗 **GitHub Repository**: [Your GitHub URL Here]
+🔗 **GitHub Repository**: https://github.com/Fazlur4471/quiz-app
 
 ## 🎯 Overview
 
@@ -170,9 +170,9 @@ This project follows conventional commits:
 ## 📧 Contact
 
 **Your Name**
-- Email: your.email@example.com
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+- Email: slmfazlur@gmail.com
+- GitHub: (https://github.com/Fazlur4471)
+- LinkedIn: (https://www.linkedin.com/in/fazlur-rehman-137933211/)
 
 ---
 
