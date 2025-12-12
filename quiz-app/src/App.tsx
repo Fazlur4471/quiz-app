@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -30,16 +30,15 @@ const quizData = [
   }
 ];
 
-const QuizApp = () => {
+function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [hoveredOption, setHoveredOption] = useState<string | null>(null);
   const [showResults, setShowResults] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [pawOpen, setPawOpen] = useState(false);
 
-  // Animate paw
-  React.useEffect(() => {
+  // Animate paw opening and closing
+  useEffect(() => {
     const interval = setInterval(() => {
       setPawOpen(prev => !prev);
     }, 1500);
@@ -54,30 +53,24 @@ const QuizApp = () => {
 
   const handleNext = () => {
     if (currentQuestion < quizData.length - 1) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion + 1);
-        setIsTransitioning(false);
-      }, 300);
+      setCurrentQuestion(currentQuestion + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion - 1);
-        setIsTransitioning(false);
-      }, 300);
+      setCurrentQuestion(currentQuestion - 1);
     }
   };
 
   const handleSubmit = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setShowResults(true);
-      setIsTransitioning(false);
-    }, 800);
+    setShowResults(true);
+  };
+
+  const handlePlayAgain = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswers([]);
+    setShowResults(false);
   };
 
   const calculateScore = () => {
@@ -94,126 +87,153 @@ const QuizApp = () => {
   const currentAnswer = selectedAnswers[currentQuestion];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-200 via-cyan-200 to-blue-300 flex items-center justify-center p-4 relative overflow-hidden">
+    <div 
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #bfdbfe 0%, #a5f3fc 50%, #bfdbfe 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-20 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, -100, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '40px',
+          left: '40px',
+          width: '384px',
+          height: '384px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: '50%',
+          filter: 'blur(80px)'
+        }}
+        animate={{
+          x: [0, 100, 0],
+          y: [0, 50, 0],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      />
+      <motion.div
+        style={{
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px',
+          width: '500px',
+          height: '500px',
+          background: 'rgba(103, 232, 249, 0.2)',
+          borderRadius: '50%',
+          filter: 'blur(80px)'
+        }}
+        animate={{
+          x: [0, -100, 0],
+          y: [0, -50, 0],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      />
 
       <AnimatePresence mode="wait">
         {!showResults ? (
           <motion.div
             key="quiz"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ duration: 0.8 }}
-            className="relative w-full max-w-4xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            style={{
+              position: 'relative',
+              width: '100%',
+              maxWidth: '1200px'
+            }}
           >
-            {/* Main Card */}
-            <motion.div
-              className="bg-white rounded-3xl shadow-2xl p-12 relative"
+            {/* Main Card with proper shadow and border */}
+            <div 
               style={{
-                boxShadow: '0 30px 60px rgba(0, 0, 0, 0.15)'
+                background: 'white',
+                borderRadius: '40px',
+                padding: '64px',
+                position: 'relative',
+                boxShadow: '0 40px 80px rgba(0, 0, 0, 0.12), 0 20px 40px rgba(0, 0, 0, 0.08)',
+                border: isLastQuestion ? '4px solid #3b82f6' : 'none'
               }}
             >
-              {/* Border glow effect on last question */}
-              {isLastQuestion && (
-                <motion.div
-                  className="absolute inset-0 rounded-3xl"
-                  style={{
-                    border: '3px solid transparent',
-                    background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #3b82f6, #06b6d4) border-box',
-                  }}
-                  animate={{
-                    boxShadow: [
-                      '0 0 20px rgba(59, 130, 246, 0.3)',
-                      '0 0 40px rgba(59, 130, 246, 0.6)',
-                      '0 0 20px rgba(59, 130, 246, 0.3)',
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              )}
-
               {/* Content */}
-              <div className="relative z-10">
+              <div style={{ position: 'relative', zIndex: 10 }}>
                 {/* Header */}
                 <motion.div
-                  className="text-center mb-8"
+                  style={{ textAlign: 'center', marginBottom: '40px' }}
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <h1 className="text-5xl font-serif mb-2">
-                    <span className="text-gray-800">Test Your </span>
-                    <span className="text-cyan-600 italic">Knowledge</span>
+                  <h1 style={{ 
+                    fontSize: '60px', 
+                    fontFamily: 'Playfair Display, Georgia, serif',
+                    marginBottom: '12px',
+                    lineHeight: 1.2
+                  }}>
+                    <span style={{ color: '#111827' }}>Test Your </span>
+                    <span style={{ color: '#0891b2', fontStyle: 'italic' }}>Knowledge</span>
                   </h1>
-                  <p className="text-gray-600 text-sm">
+                  <p style={{ color: '#4b5563', fontSize: '16px' }}>
                     Answer all questions to see your results
                   </p>
                 </motion.div>
 
                 {/* Progress Bar */}
-                <div className="flex gap-2 mb-8 justify-center">
+                <div style={{ display: 'flex', gap: '12px', marginBottom: '40px', justifyContent: 'center' }}>
                   {quizData.map((_, index) => (
                     <motion.div
                       key={index}
-                      className="h-2 rounded-full"
                       style={{
-                        width: `${100 / quizData.length}%`,
-                        maxWidth: '150px',
+                        height: '8px',
+                        width: '120px',
+                        borderRadius: '4px',
                         backgroundColor: index <= currentQuestion ? '#1e3a8a' : '#d1d5db'
                       }}
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: index * 0.1, duration: 0.3 }}
                     />
                   ))}
                 </div>
 
-                {/* Question */}
+                {/* Question with fade transition */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentQuestion}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.5 }}
-                    className="space-y-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    style={{ marginTop: '24px' }}
                   >
                     {/* Question Text */}
-                    <div className="bg-cyan-50 p-4 rounded-lg text-center">
-                      <p className="text-lg font-medium text-gray-800">
+                    <div style={{
+                      background: '#ecfeff',
+                      padding: '20px',
+                      borderRadius: '12px',
+                      textAlign: 'center',
+                      marginBottom: '32px'
+                    }}>
+                      <p style={{ fontSize: '18px', fontWeight: 500, color: '#1f2937' }}>
                         {currentQuestion + 1}. {quizData[currentQuestion].question}
                       </p>
                     </div>
 
                     {/* Options */}
-                    <div className="space-y-3">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                       {quizData[currentQuestion].options.map((option, index) => {
                         const isSelected = currentAnswer === option;
                         const isHovered = hoveredOption === option;
@@ -222,22 +242,34 @@ const QuizApp = () => {
                           <motion.button
                             key={option}
                             onClick={() => handleSelectAnswer(option)}
-                            onHoverStart={() => setHoveredOption(option)}
-                            onHoverEnd={() => setHoveredOption(null)}
-                            className="w-full p-4 rounded-lg text-center font-medium transition-all relative"
+                            onMouseEnter={() => setHoveredOption(option)}
+                            onMouseLeave={() => setHoveredOption(null)}
                             style={{
-                              backgroundColor: 'white',
+                              width: '100%',
+                              padding: '20px',
+                              borderRadius: '12px',
+                              textAlign: 'center',
+                              fontWeight: 500,
+                              background: 'white',
+                              cursor: 'pointer',
                               border: `3px solid ${
                                 isSelected ? '#fbbf24' : 
                                 isHovered ? '#ec4899' : 
                                 '#e5e7eb'
                               }`,
-                              color: '#1f2937'
+                              color: '#1f2937',
+                              transition: 'all 0.2s ease-in-out',
+                              fontSize: '16px'
                             }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
-                            whileHover={{ scale: 1.02 }}
+                            whileHover={{ 
+                              scale: 1.02,
+                              boxShadow: isSelected 
+                                ? '0 8px 20px rgba(251, 191, 36, 0.3)' 
+                                : '0 8px 20px rgba(236, 72, 153, 0.3)'
+                            }}
                             whileTap={{ scale: 0.98 }}
                           >
                             {option}
@@ -249,25 +281,40 @@ const QuizApp = () => {
                 </AnimatePresence>
 
                 {/* Navigation */}
-                <div className="flex justify-between items-center mt-8">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px' }}>
                   <motion.button
                     onClick={handlePrevious}
                     disabled={currentQuestion === 0}
-                    className="p-3 rounded-full bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-200 transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    style={{
+                      padding: '12px',
+                      borderRadius: '50%',
+                      background: '#cffafe',
+                      border: 'none',
+                      cursor: currentQuestion === 0 ? 'not-allowed' : 'pointer',
+                      opacity: currentQuestion === 0 ? 0.3 : 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    whileHover={{ scale: currentQuestion === 0 ? 1 : 1.1 }}
+                    whileTap={{ scale: currentQuestion === 0 ? 1 : 0.9 }}
                   >
-                    <ChevronLeft className="w-5 h-5 text-gray-700" />
+                    <ChevronLeft style={{ width: '24px', height: '24px', color: '#374151' }} />
                   </motion.button>
 
                   {isLastQuestion ? (
                     <motion.button
                       onClick={handleSubmit}
                       disabled={!currentAnswer}
-                      className="px-8 py-3 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
+                        padding: '12px 40px',
+                        borderRadius: '12px',
+                        fontWeight: 600,
+                        border: 'none',
+                        cursor: currentAnswer ? 'pointer' : 'not-allowed',
                         backgroundColor: currentAnswer ? '#06b6d4' : '#e5e7eb',
-                        color: currentAnswer ? 'white' : '#9ca3af'
+                        color: currentAnswer ? 'white' : '#9ca3af',
+                        fontSize: '16px'
                       }}
                       whileHover={currentAnswer ? { scale: 1.05 } : {}}
                       whileTap={currentAnswer ? { scale: 0.95 } : {}}
@@ -277,60 +324,233 @@ const QuizApp = () => {
                   ) : (
                     <motion.button
                       onClick={handleNext}
-                      className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                      style={{
+                        padding: '12px',
+                        borderRadius: '50%',
+                        background: '#cffafe',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
-                      <ChevronRight className="w-5 h-5 text-gray-700" />
+                      <ChevronRight style={{ width: '24px', height: '24px', color: '#374151' }} />
                     </motion.button>
                   )}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Cat Paw Mascot - Only on first question */}
             {currentQuestion === 0 && (
               <motion.div
-                className="absolute left-4 bottom-4"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
+                style={{
+                  position: 'absolute',
+                  left: '-80px',
+                  bottom: '40px',
+                  zIndex: 100
+                }}
+                initial={{ opacity: 0, x: -50, y: 50 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{ delay: 0.5, type: "spring" }}
               >
-                <div className="relative">
+                <div style={{ position: 'relative' }}>
                   {/* Speech Bubble */}
-                  <div className="bg-white px-4 py-2 rounded-lg shadow-lg mb-2 relative">
-                    <p className="text-sm font-medium text-gray-800 whitespace-nowrap">
+                  <div style={{
+                    background: 'white',
+                    padding: '14px 24px',
+                    borderRadius: '20px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                    marginBottom: '16px',
+                    position: 'relative'
+                  }}>
+                    <p style={{ 
+                      fontSize: '18px', 
+                      fontWeight: 700, 
+                      color: '#1f2937',
+                      whiteSpace: 'nowrap',
+                      margin: 0
+                    }}>
                       Best of Luck!
                     </p>
-                    <div className="absolute bottom-0 left-4 transform translate-y-1/2">
-                      <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white" />
-                    </div>
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: '30px',
+                      transform: 'translateY(50%)',
+                      width: 0,
+                      height: 0,
+                      borderLeft: '12px solid transparent',
+                      borderRight: '12px solid transparent',
+                      borderTop: '12px solid white'
+                    }} />
                   </div>
 
-                  {/* Cat Paw */}
-                  <motion.div
-                    className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center shadow-lg"
-                    animate={{
-                      scale: pawOpen ? 1.1 : 1,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="relative">
-                      {/* Paw pad */}
-                      <div className="w-8 h-10 bg-pink-300 rounded-full" />
-                      {/* Toe beans */}
+                  {/* Cat Paw Container */}
+                  <div style={{
+                    position: 'relative',
+                    width: '160px',
+                    height: '160px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {/* Outer pink glow */}
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'radial-gradient(circle, rgba(251, 207, 232, 0.6) 0%, rgba(251, 207, 232, 0) 70%)',
+                      borderRadius: '50%'
+                    }} />
+
+                    {/* Main Large Paw Pad (bottom center) */}
+                    <motion.div
+                      style={{
+                        position: 'absolute',
+                        bottom: '15px',
+                        left: '50%',
+                        transform: 'translateX(-50%)'
+                      }}
+                      animate={{
+                        scale: pawOpen ? 1.03 : 1,
+                      }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                    >
+                      <div style={{
+                        width: '55px',
+                        height: '65px',
+                        background: '#f9a8d4',
+                        borderRadius: '45% 45% 50% 50%',
+                        boxShadow: '0 4px 12px rgba(249, 168, 212, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3)',
+                        position: 'relative'
+                      }}>
+                        {/* Inner highlight for depth */}
+                        <div style={{
+                          position: 'absolute',
+                          top: '8px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: '30px',
+                          height: '20px',
+                          background: 'rgba(255, 255, 255, 0.2)',
+                          borderRadius: '50%',
+                          filter: 'blur(4px)'
+                        }} />
+                      </div>
+                    </motion.div>
+
+                    {/* Toe Beans Container - Animated Opening/Closing */}
+                    <motion.div
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        display: 'flex',
+                        gap: '6px',
+                        alignItems: 'flex-end'
+                      }}
+                      animate={{
+                        y: pawOpen ? -6 : 0,
+                      }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                    >
+                      {/* Left Toe Bean */}
                       <motion.div
-                        className="absolute -top-2 left-1/2 -translate-x-1/2 flex gap-1"
                         animate={{
-                          y: pawOpen ? -2 : 0,
+                          rotate: pawOpen ? -12 : 0,
+                          x: pawOpen ? -2 : 0,
                         }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
                       >
-                        <div className="w-3 h-4 bg-pink-300 rounded-full" />
-                        <div className="w-3 h-4 bg-pink-300 rounded-full" />
-                        <div className="w-3 h-4 bg-pink-300 rounded-full" />
+                        <div style={{
+                          width: '22px',
+                          height: '32px',
+                          background: '#f9a8d4',
+                          borderRadius: '50% 50% 45% 45%',
+                          boxShadow: '0 3px 8px rgba(249, 168, 212, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.25)',
+                          position: 'relative'
+                        }}>
+                          {/* Highlight */}
+                          <div style={{
+                            position: 'absolute',
+                            top: '5px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: '10px',
+                            height: '12px',
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: '50%',
+                            filter: 'blur(2px)'
+                          }} />
+                        </div>
                       </motion.div>
-                    </div>
-                  </motion.div>
+
+                      {/* Center Toe Bean (tallest) */}
+                      <motion.div
+                        animate={{
+                          y: pawOpen ? -4 : 0,
+                        }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                      >
+                        <div style={{
+                          width: '24px',
+                          height: '36px',
+                          background: '#f9a8d4',
+                          borderRadius: '50% 50% 45% 45%',
+                          boxShadow: '0 3px 10px rgba(249, 168, 212, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3)',
+                          position: 'relative'
+                        }}>
+                          {/* Highlight */}
+                          <div style={{
+                            position: 'absolute',
+                            top: '6px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: '12px',
+                            height: '14px',
+                            background: 'rgba(255, 255, 255, 0.25)',
+                            borderRadius: '50%',
+                            filter: 'blur(2px)'
+                          }} />
+                        </div>
+                      </motion.div>
+
+                      {/* Right Toe Bean */}
+                      <motion.div
+                        animate={{
+                          rotate: pawOpen ? 12 : 0,
+                          x: pawOpen ? 2 : 0,
+                        }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                      >
+                        <div style={{
+                          width: '22px',
+                          height: '32px',
+                          background: '#f9a8d4',
+                          borderRadius: '50% 50% 45% 45%',
+                          boxShadow: '0 3px 8px rgba(249, 168, 212, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.25)',
+                          position: 'relative'
+                        }}>
+                          {/* Highlight */}
+                          <div style={{
+                            position: 'absolute',
+                            top: '5px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: '10px',
+                            height: '12px',
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: '50%',
+                            filter: 'blur(2px)'
+                          }} />
+                        </div>
+                      </motion.div>
+                    </motion.div>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -339,17 +559,24 @@ const QuizApp = () => {
           // Results Screen
           <motion.div
             key="results"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="w-full h-screen flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             style={{
-              background: 'linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%)',
+              width: '100%',
+              height: '100vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              background: 'linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #e0f2fe 100%)'
             }}
           >
-            <div className="text-center">
+            <div style={{ textAlign: 'center' }}>
               <motion.p
-                className="text-gray-600 mb-4"
+                style={{ color: '#4b5563', fontSize: '18px', marginBottom: '24px' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -357,7 +584,13 @@ const QuizApp = () => {
                 Keep Learning!
               </motion.p>
               <motion.h2
-                className="text-4xl font-serif text-cyan-700 mb-6"
+                style={{
+                  fontSize: '48px',
+                  fontFamily: 'Playfair Display, Georgia, serif',
+                  color: '#0e7490',
+                  marginBottom: '32px',
+                  fontStyle: 'italic'
+                }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
@@ -365,24 +598,56 @@ const QuizApp = () => {
                 Your Final score is
               </motion.h2>
               <motion.div
-                className="text-9xl font-bold text-cyan-700"
-                initial={{ opacity: 0, scale: 0 }}
+                style={{
+                  fontSize: '180px',
+                  fontWeight: 700,
+                  color: '#0e7490',
+                  lineHeight: 1,
+                  marginBottom: '48px'
+                }}
+                initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ 
-                  delay: 0.7,
+                  delay: 0.8,
                   type: "spring",
-                  stiffness: 200,
-                  damping: 15
+                  stiffness: 150,
+                  damping: 12
                 }}
               >
                 {calculateScore()}
               </motion.div>
+
+              {/* Play Again Button */}
+              <motion.button
+                onClick={handlePlayAgain}
+                style={{
+                  padding: '16px 40px',
+                  background: 'linear-gradient(to right, #0891b2, #2563eb)',
+                  color: 'white',
+                  fontWeight: 600,
+                  fontSize: '18px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 20px 40px rgba(6, 182, 212, 0.4)'
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Play Again
+              </motion.button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
-};
+}
 
-export default QuizApp;
+export default App;
